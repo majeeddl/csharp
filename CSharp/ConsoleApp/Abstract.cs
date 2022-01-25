@@ -6,6 +6,10 @@
 
 //The third one is that in a derived class you must implement all members in the base abstract class
 
+//The last one is that the abstract classes can not be instantiated
+
+//When we want to provide some common behavoiur, while forcing other developers to follow ou design
+
 public abstract class Shape{
     public abstract void draw();
 }
