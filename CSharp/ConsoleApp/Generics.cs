@@ -21,6 +21,7 @@ namespace Generics
         }
     }
 
+   // T is a parameter
     public class GenericsList<T>
     {
 
@@ -32,6 +33,13 @@ namespace Generics
         public T this[int index]
         {
             get { throw new NotImplementedException(); }
+        }
+    }
+
+    // Generics dictionary
+    public class GenericDictionary<TKey,TValue>{
+        public void Add(TKey key, TValue value){
+
         }
     }
 }
