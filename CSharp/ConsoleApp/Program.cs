@@ -44,6 +44,22 @@ namespace ConsoleApp
             var dictionary = new GenericDictionary<string,Book>();
             dictionary.Add("12",new Book());
 
+
+            var numberNullable = new Nullable<int>(5);
+            System.Console.WriteLine("Has Value ?" + numberNullable.HasValue);
+            System.Console.WriteLine("Value : "+ numberNullable.GetValueOrDefault());
+
+
+            //Delegates
+
+            var processor = new PhotoProcessor();
+            var filters = new PhotoFilters();
+            // PhotoProcessor.PhotoFilterHandler filterHandler = filters.ApplyBrightness;
+            Action<Photo> filterHandler = filters.ApplyBrightness;
+            filterHandler+= filters.ApplyConstract;
+
+            processor.Process("photo.jpg",filterHandler);
+
         }
     }
 }
