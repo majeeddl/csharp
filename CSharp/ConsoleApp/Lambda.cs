@@ -25,7 +25,7 @@ namespace ConsoleApp
     public class Lambda
     {
 
-        static void Main()
+        static void MainLambda()
         {
 
             // Lmabda expression
@@ -47,7 +47,8 @@ namespace ConsoleApp
 
             var cheapBooks = books.FindAll(book => book.Price < 1500);
 
-            foreach( var book in cheapBooks){
+            foreach (var book in cheapBooks)
+            {
                 System.Console.WriteLine(book.Title);
             }
 

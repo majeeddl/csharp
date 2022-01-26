@@ -60,6 +60,19 @@ namespace ConsoleApp
 
             processor.Process("photo.jpg",filterHandler);
 
+
+
+            //Events
+            var video = new Video(){ Title = "Video"};
+            var videoEncoder = new VideoEncoder();// publisher
+            var mailService = new MailService(); // Subscriber
+            var messageService = new MessageService(); //Subscriber
+
+            videoEncoder.VideoEncoded+= mailService.OnVideoEncoded;
+            videoEncoder.VideoEncoded+= messageService.OnVideoEncoded;
+            videoEncoder.Encode(video); 
+            
+
         }
     }
 }
