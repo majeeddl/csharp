@@ -94,6 +94,10 @@ namespace ConsoleApp
             }
 
 
+            int? number1 = null;
+
+            System.Console.WriteLine(number1.GetValueOrDefault());
+
 
         }
     }
