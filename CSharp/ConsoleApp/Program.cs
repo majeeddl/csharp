@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Generics;
 
 namespace ConsoleApp
@@ -41,13 +42,13 @@ namespace ConsoleApp
 
 
             //use of generic dictionary
-            var dictionary = new GenericDictionary<string,Book>();
-            dictionary.Add("12",new Book());
+            var dictionary = new GenericDictionary<string, Book>();
+            dictionary.Add("12", new Book());
 
 
             var numberNullable = new Nullable<int>(5);
             System.Console.WriteLine("Has Value ?" + numberNullable.HasValue);
-            System.Console.WriteLine("Value : "+ numberNullable.GetValueOrDefault());
+            System.Console.WriteLine("Value : " + numberNullable.GetValueOrDefault());
 
 
             //Delegates
@@ -56,22 +57,43 @@ namespace ConsoleApp
             var filters = new PhotoFilters();
             // PhotoProcessor.PhotoFilterHandler filterHandler = filters.ApplyBrightness;
             Action<Photo> filterHandler = filters.ApplyBrightness;
-            filterHandler+= filters.ApplyConstract;
+            filterHandler += filters.ApplyConstract;
 
-            processor.Process("photo.jpg",filterHandler);
+            processor.Process("photo.jpg", filterHandler);
 
 
 
             //Events
-            var video = new Video(){ Title = "Video"};
+            var video = new Video() { Title = "Video" };
             var videoEncoder = new VideoEncoder();// publisher
             var mailService = new MailService(); // Subscriber
             var messageService = new MessageService(); //Subscriber
 
-            videoEncoder.VideoEncoded+= mailService.OnVideoEncoded;
-            videoEncoder.VideoEncoded+= messageService.OnVideoEncoded;
-            videoEncoder.Encode(video); 
-            
+            videoEncoder.VideoEncoded += mailService.OnVideoEncoded;
+            videoEncoder.VideoEncoded += messageService.OnVideoEncoded;
+            videoEncoder.Encode(video);
+
+
+            //Linq
+            var getBooks = new Linq.BookRepository().GetBooks();
+            var cheapBooks = getBooks
+                                    .Where(book => book.Price < 10)
+                                    .OrderBy(b => b.Title)
+                                    .Select(b => b.Title);
+
+            var cheaperBooksByLinqQuery = from b in getBooks
+                                            where b.Price < 10
+                                            orderby b.Title
+                                            select b;
+
+
+            foreach (var b in cheapBooks)
+            {
+                // System.Console.WriteLine(b.Title + " " + b.Price);
+                System.Console.WriteLine(b);
+            }
+
+
 
         }
     }
