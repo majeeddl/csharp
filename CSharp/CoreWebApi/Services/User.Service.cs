@@ -43,7 +43,7 @@ namespace CoreWebApi.Services
              var tokenDescriptor = new SecurityTokenDescriptor{
                  Subject = new ClaimsIdentity(
                      new Claim[]{
-                         new Claim(ClaimTypes.Name,user.Id.ToString())
+                         new Claim(ClaimTypes.Name,user.Username.ToString())
                      }
                  ),
                  Expires = DateTime.UtcNow.AddDays(7),
@@ -66,6 +66,22 @@ namespace CoreWebApi.Services
                 x.Password = null;
                 return x;
             });
+        }
+
+        public bool IsUserExist(User user)
+        {
+            bool isExist;
+
+            var userName = user.Username.ToLower();
+            isExist = _users.Any(n => n.Username == userName);
+
+            return isExist;
+        }
+
+        public IEnumerable<User> Insert(User user)
+        {
+            _users.Add(user);
+            return _users;
         }
     }
 }

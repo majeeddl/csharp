@@ -1,0 +1,7 @@
+﻿namespace WebApiJwt.Helpers
+{
+    public class AppSettings
+    {
+        public string Secret { get; set; }
+    }
+}

@@ -73,7 +73,11 @@ namespace CoreWebApi
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    //etc
+                    ValidateLifetime = true,
+                    RequireExpirationTime = false,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
@@ -93,12 +97,12 @@ namespace CoreWebApi
 
             app.UseRouting();
 
-            
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            
 
             app.UseEndpoints(endpoints =>
             {
