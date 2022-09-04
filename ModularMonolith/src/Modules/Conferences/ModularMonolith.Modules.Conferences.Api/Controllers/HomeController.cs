@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace ModularMonolith.Modules.Conferences.Api.Controllers;
 
-public class HomeController
+[Route(BasePath)]
+public class HomeController:BaseController
 {
-    
+    [HttpGet]
+    public ActionResult<string> Get() => " Hello Conferences";
 }

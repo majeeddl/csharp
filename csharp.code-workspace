@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "./CSharp"
+		},
+		{
+			"path": "./DesignPatterns"
+		},
+		{
+			"path": "ModularMonolith"
+		}
+	],
+	"settings": {}
+}

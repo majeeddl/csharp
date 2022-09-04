@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ModularMonolith.Modules.Conferences.Api.Controllers;
 
-[Route(BasePath)]
+[Microsoft.AspNetCore.Components.Route(BasePath)]
 public class ConferencesController:BaseController
 {
-    
+
 }
