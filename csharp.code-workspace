@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "ModularMonolith"
+		},
+		{
+			"path": "CleanArchitectureDDD"
 		}
 	],
 	"settings": {}
