@@ -38,7 +38,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(Guid id, UpdateItemDto updateItemDto)
+        public IActionResult Put(Guid id, UpdateItemDto updateItemDto)
         {
             var existingItem = items.SingleOrDefault(item => item.Id == id);
 
@@ -54,6 +54,17 @@ namespace Play.Catalog.Service.Controllers
             items[index] = updatedItem;
 
             return NoContent();
-        } 
+        }
+
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid Id)
+        {
+            var index = items.FindIndex(item => item.Id == Id);
+
+            items.RemoveAt(index);
+
+            return NoContent();
+        }
     }
 }
