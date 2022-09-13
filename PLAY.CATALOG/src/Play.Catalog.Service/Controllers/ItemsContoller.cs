@@ -23,9 +23,16 @@ namespace Play.Catalog.Service.Controllers
         }
         
         [HttpGet("{id}")]
-        public ItemDto GetById(Guid id)
+        public ActionResult<ItemDto> GetById(Guid id)
         {
-            return items.SingleOrDefault(i => i != null && i.Id == id);
+            var item= items.SingleOrDefault(i => i != null && i.Id == id);
+
+            if (item == null)
+            {
+                return NoContent();
+            }
+
+            return item;
         }
 
         [HttpPost]
@@ -42,16 +49,19 @@ namespace Play.Catalog.Service.Controllers
         {
             var existingItem = items.SingleOrDefault(item => item.Id == id);
 
-            var updatedItem = existingItem with
+            if (existingItem != null)
             {
-                Name = updateItemDto.Name,
-                Description = updateItemDto.Description,
-                Price = updateItemDto.Price
-            };
+                var updatedItem = existingItem with
+                {
+                    Name = updateItemDto.Name,
+                    Description = updateItemDto.Description,
+                    Price = updateItemDto.Price
+                };
 
-            var index = items.FindIndex(existingItem => existingItem.Id == id);
+                var index = items.FindIndex(existingItem => existingItem.Id == id);
 
-            items[index] = updatedItem;
+                items[index] = updatedItem;
+            }
 
             return NoContent();
         }
