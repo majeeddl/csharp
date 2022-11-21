@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Repositories;
 using Play.Catalog.Service.Settings;
@@ -16,9 +17,13 @@ var m = mongoSettings;
 
 
 //var confOption = builder.Configuration.GetSection("MongoDbSettings");
-services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+//services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 
-services.AddSingleton<IItemsRepository, ItemsRepository>();
+//services.AddSingleton<IRepository<Item>, MongoRepository<Item>>();
+
+services.InitMongo(builder);
+
+services.AddMongoRepository<Item>();
 
 services.AddControllers((options) =>
 {

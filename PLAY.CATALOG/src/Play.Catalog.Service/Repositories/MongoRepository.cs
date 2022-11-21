@@ -4,42 +4,53 @@ using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Settings;
+using Play.Catalog.Service.utils;
 
 namespace Play.Catalog.Service.Repositories;
 
 
-public class ItemsRepository : IItemsRepository
+public class MongoRepository<T> : IRepository<T> where T : IEntity
 {
 
-    private const string CollectionName = "items";
+    private readonly IMongoCollection<T> _dbCollection;
 
-    private readonly IMongoCollection<Item> _dbCollection;
+    private readonly FilterDefinitionBuilder<T> _filterDefinitionBuilder = Builders<T>.Filter;
 
-    private readonly FilterDefinitionBuilder<Item> _filterDefinitionBuilder = Builders<Item>.Filter;
+    private protected string GetCollectionName(Type documentType)
+    {
+        return ((BsonCollectionAttribute)documentType.GetCustomAttributes(
+                typeof(BsonCollectionAttribute),
+                true)
+            .FirstOrDefault())?.CollectionName;
+    }
 
-    public ItemsRepository(IOptions<MongoDbSettings> mongoDbSettings)
+    public MongoRepository(IOptions<MongoDbSettings> mongoDbSettings)
     {
         var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
 
         var database = mongoClient.GetDatabase(mongoDbSettings.Value.DatabaseName);
 
-        _dbCollection = database.GetCollection<Item>(CollectionName);
+        var collectionNameWithAttribute = GetCollectionName(typeof(T));
+
+        var collectionName = typeof(T).Name.ToLowerInvariant() + "s";
+
+        _dbCollection = database.GetCollection<T>(collectionName);
     }
 
-    public async Task<IReadOnlyCollection<Item>> GetAllAsync()
+    public async Task<IReadOnlyCollection<T>> GetAllAsync()
     {
         return await _dbCollection.Find(_filterDefinitionBuilder.Empty).ToListAsync();
     }
 
 
-    public async Task<Item> GetAsync(Guid id)
+    public async Task<T> GetAsync(Guid id)
     {
         var filter = _filterDefinitionBuilder.Eq(entity => entity.Id, id);
         return await _dbCollection.Find(filter).FirstOrDefaultAsync();
     }
 
 
-    public async Task CreatAsync(Item entity)
+    public async Task CreateAsync(T entity)
     {
         if (entity == null)
         {
@@ -49,7 +60,7 @@ public class ItemsRepository : IItemsRepository
         await _dbCollection.InsertOneAsync(entity);
     }
 
-    public async Task UpdateAsync(Item entity)
+    public async Task UpdateAsync(T entity)
     {
         if (entity == null)
         {
