@@ -16,7 +16,7 @@ public class ItemsRepository
 
     public ItemsRepository()
     {
-        var mongoClient = new MongoClient("mongodb://locahost:27017");
+        var mongoClient = new MongoClient("mongodb://localhost:27017");
 
         var database = mongoClient.GetDatabase("Catalog");
 
