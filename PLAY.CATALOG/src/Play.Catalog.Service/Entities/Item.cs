@@ -1,8 +1,11 @@
-﻿namespace Play.Catalog.Service.Entities;
+﻿using Play.Catalog.Service.Interfaces;
+using Play.Catalog.Service.utils;
 
-public class Item
+namespace Play.Catalog.Service.Entities;
+
+[BsonCollection("items")]
+public class Item : IEntity
 {
-
 
     public Guid Id { get; set; }
     public string? Name { get; set; }
