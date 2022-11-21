@@ -1,23 +1,34 @@
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Play.Catalog.Service.Interfaces;
+using Play.Catalog.Service.Repositories;
+using Play.Catalog.Service.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+
+var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+
 
 // Add services to the container.
+var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+var m = mongoSettings;
 
-builder.Services.AddControllers((options) =>
+
+//var confOption = builder.Configuration.GetSection("MongoDbSettings");
+services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+
+services.AddSingleton<IItemsRepository, ItemsRepository>();
+
+services.AddControllers((options) =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
 });
 
-//builder.Services.Configure<JsonOptions>(options =>
-//{
-//    options.SerializerOptions
-//});
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 
