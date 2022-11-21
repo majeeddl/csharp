@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Service.Dtos;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.ExtensionMethods;
+using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Repositories;
 
 namespace Play.Catalog.Service.Controllers
@@ -12,14 +13,14 @@ namespace Play.Catalog.Service.Controllers
     [Route("items")]
     public class ItemsController : ControllerBase
     {
-        // private static readonly List<ItemDto> items = new()
-        // {
-        //     new ItemDto(Guid.NewGuid(), "Potion", "Restore", 5, DateTimeOffset.Now),
-        //     new ItemDto(Guid.NewGuid(), "Antidote", "Cures poison", 10, DateTimeOffset.Now),
-        //     new ItemDto(Guid.NewGuid(), "Bronze sword", "Deals a small amount of damage", 20, DateTimeOffset.Now),
-        // };
 
-        private readonly ItemsRepository itemsRepository = new();
+        private readonly IItemsRepository itemsRepository;
+
+
+        public ItemsController(IItemsRepository itemsRepository)
+        {
+            this.itemsRepository = itemsRepository;
+        }
 
         [HttpGet]
         public async Task<IEnumerable<ItemDto>> GetAsync()

@@ -1,11 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
+using Play.Catalog.Service.Interfaces;
+using Play.Catalog.Service.Settings;
 
 namespace Play.Catalog.Service.Repositories;
 
 
-public class ItemsRepository
+public class ItemsRepository : IItemsRepository
 {
 
     private const string CollectionName = "items";
@@ -14,11 +17,11 @@ public class ItemsRepository
 
     private readonly FilterDefinitionBuilder<Item> _filterDefinitionBuilder = Builders<Item>.Filter;
 
-    public ItemsRepository()
+    public ItemsRepository(IOptions<MongoDbSettings> mongoDbSettings)
     {
-        var mongoClient = new MongoClient("mongodb://localhost:27017");
+        var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
 
-        var database = mongoClient.GetDatabase("Catalog");
+        var database = mongoClient.GetDatabase(mongoDbSettings.Value.DatabaseName);
 
         _dbCollection = database.GetCollection<Item>(CollectionName);
     }
