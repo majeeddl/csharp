@@ -49,7 +49,7 @@ namespace Play.Catalog.Service.Controllers
         {
             var existingItem = items.SingleOrDefault(item => item.Id == id);
 
-            if (existingItem != null)
+            if (existingItem == null) return NoContent();
             {
                 var updatedItem = existingItem with
                 {
@@ -58,7 +58,7 @@ namespace Play.Catalog.Service.Controllers
                     Price = updateItemDto.Price
                 };
 
-                var index = items.FindIndex(existingItem => existingItem.Id == id);
+                var index = items.FindIndex(item => item.Id == id);
 
                 items[index] = updatedItem;
             }
