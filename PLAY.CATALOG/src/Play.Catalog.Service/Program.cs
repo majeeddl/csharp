@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,12 @@ builder.Services.AddControllers((options) =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
 });
+
+//builder.Services.Configure<JsonOptions>(options =>
+//{
+//    options.SerializerOptions
+//});
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
