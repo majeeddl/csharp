@@ -24,12 +24,8 @@ public class MongoRepository<T> : IRepository<T> where T : IEntity
             .FirstOrDefault())?.CollectionName;
     }
 
-    public MongoRepository(IOptions<MongoDbSettings> mongoDbSettings)
+    public MongoRepository(IMongoDatabase database)
     {
-        var mongoClient = new MongoClient(mongoDbSettings.Value.ConnectionString);
-
-        var database = mongoClient.GetDatabase(mongoDbSettings.Value.DatabaseName);
-
         var collectionNameWithAttribute = GetCollectionName(typeof(T));
 
         var collectionName = typeof(T).Name.ToLowerInvariant() + "s";

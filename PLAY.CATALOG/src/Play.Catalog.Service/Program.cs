@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Repositories;
@@ -21,7 +22,9 @@ var m = mongoSettings;
 
 //services.AddSingleton<IRepository<Item>, MongoRepository<Item>>();
 
-services.InitMongo(builder);
+
+
+services.InitMongo();
 
 services.AddMongoRepository<Item>();
 
