@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Settings;
-using Play.Catalog.Service.utils;
+using Play.Catalog.Service.Utils;
 
 namespace Play.Catalog.Service.Repositories;
 

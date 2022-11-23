@@ -1,4 +1,4 @@
-﻿namespace Play.Catalog.Service.utils
+﻿namespace Play.Catalog.Service.Utils
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class BsonCollectionAttribute : Attribute
