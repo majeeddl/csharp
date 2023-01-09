@@ -1,4 +1,5 @@
 ﻿
+using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Play.Common;
@@ -38,10 +39,20 @@ public class MongoRepository<T> : IRepository<T> where T : IEntity
         return await _dbCollection.Find(_filterDefinitionBuilder.Empty).ToListAsync();
     }
 
+    public async Task<IReadOnlyCollection<T>> GetAllAsync(Expression<Func<T, bool>> filter)
+    {
+        return await _dbCollection.Find(filter).ToListAsync();
+    }
+
 
     public async Task<T> GetAsync(Guid id)
     {
         var filter = _filterDefinitionBuilder.Eq(entity => entity.Id, id);
+        return await _dbCollection.Find(filter).FirstOrDefaultAsync();
+    }
+
+    public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
+    {
         return await _dbCollection.Find(filter).FirstOrDefaultAsync();
     }
 

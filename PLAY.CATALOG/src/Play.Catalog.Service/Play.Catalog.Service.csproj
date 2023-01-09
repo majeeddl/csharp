@@ -15,4 +15,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Play.Common">
+      <HintPath>..\..\..\PLAY.COMMON\src\Play.common\bin\Debug\net7.0\Play.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

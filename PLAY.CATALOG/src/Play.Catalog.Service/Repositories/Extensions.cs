@@ -7,7 +7,7 @@ namespace Play.Catalog.Service.Repositories
 {
     public static class Extensions
     {
-        public static IServiceCollection InitMongo(this IServiceCollection services)
+        public static IServiceCollection InitMongo1(this IServiceCollection services)
         {
             services.AddSingleton(provider =>
             {
@@ -21,7 +21,7 @@ namespace Play.Catalog.Service.Repositories
             return services;
         }
 
-        public static IServiceCollection AddMongoRepository<T>(this IServiceCollection services) where T : IEntity
+        public static IServiceCollection AddMongoRepository2<T>(this IServiceCollection services) where T : IEntity
         {
 
             services.AddSingleton<IRepository<T>, MongoRepository<T>>();

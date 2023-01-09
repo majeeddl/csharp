@@ -1,23 +1,26 @@
 {
-	"folders": [
-		{
-			"path": "./CSharp"
-		},
-		{
-			"path": "./DesignPatterns"
-		},
-		{
-			"path": "ModularMonolith"
-		},
-		{
-			"path": "CleanArchitectureDDD"
-		},
-		{
-			"path": "PLAY.CATALOG"
-		},
-		{
-			"path": "ShopMicroservices"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "./CSharp"
+    },
+    {
+      "path": "./DesignPatterns"
+    },
+    {
+      "path": "ModularMonolith"
+    },
+    {
+      "path": "CleanArchitectureDDD"
+    },
+    {
+      "path": "PLAY.CATALOG"
+    },
+    {
+      "path": "ShopMicroservices"
+    },
+    {
+      "path": "PLAY.COMMON"
+    }
+  ],
+  "settings": {}
 }
