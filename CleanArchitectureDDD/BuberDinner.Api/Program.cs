@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // => dependency injection
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 
