@@ -1,19 +1,19 @@
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Extensions.DependencyInjection;
+
 using Play.Catalog.Service.Entities;
-using Play.Catalog.Service.Interfaces;
 using Play.Catalog.Service.Repositories;
 using Play.Catalog.Service.Settings;
+using Play.Common;
+using Play.Common.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
-var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+//var serviceSettings = builder.Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
 
-// Add services to the container.
-var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-var m = mongoSettings;
+//// Add services to the container.
+//var mongoSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+//var m = mongoSettings;
 
 
 //var confOption = builder.Configuration.GetSection("MongoDbSettings");
@@ -21,7 +21,9 @@ var m = mongoSettings;
 
 //services.AddSingleton<IRepository<Item>, MongoRepository<Item>>();
 
-services.InitMongo(builder);
+
+
+services.InitMongo();
 
 services.AddMongoRepository<Item>();
 

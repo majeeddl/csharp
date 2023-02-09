@@ -1,10 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿
+using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Play.Catalog.Service.Entities;
-using Play.Catalog.Service.Interfaces;
-using Play.Catalog.Service.Settings;
-using Play.Catalog.Service.Utils;
+using Play.Common;
+using Play.Common.Settings;
+using Play.Common.Utils;
 
 namespace Play.Catalog.Service.Repositories;
 
@@ -26,6 +26,7 @@ public class MongoRepository<T> : IRepository<T> where T : IEntity
 
     public MongoRepository(IMongoDatabase database)
     {
+
         var collectionNameWithAttribute = GetCollectionName(typeof(T));
 
         var collectionName = typeof(T).Name.ToLowerInvariant() + "s";
@@ -38,10 +39,20 @@ public class MongoRepository<T> : IRepository<T> where T : IEntity
         return await _dbCollection.Find(_filterDefinitionBuilder.Empty).ToListAsync();
     }
 
+    public async Task<IReadOnlyCollection<T>> GetAllAsync(Expression<Func<T, bool>> filter)
+    {
+        return await _dbCollection.Find(filter).ToListAsync();
+    }
+
 
     public async Task<T> GetAsync(Guid id)
     {
         var filter = _filterDefinitionBuilder.Eq(entity => entity.Id, id);
+        return await _dbCollection.Find(filter).FirstOrDefaultAsync();
+    }
+
+    public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
+    {
         return await _dbCollection.Find(filter).FirstOrDefaultAsync();
     }
 
