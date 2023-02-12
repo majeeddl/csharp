@@ -1,6 +1,7 @@
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Contracts.Authentication;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 
@@ -18,17 +19,23 @@ public class AuthenticationController : ControllerBase
     {
         _authenticationService = authenticationService;
     }
+    
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
+    {
+        var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
+            authResult.Email, authResult.Token);
+        return response;
+    }
 
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest request)
     {
 
-        var authResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
-        
-        var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName, authResult.Email,authResult.Token);
-        
-        return Ok(response);
-        
+        // var authResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+        //
+        //
+        // return Ok(response);
+        //
         // OneOf<AuthenticationResult,DuplicateEmailError> registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
         //
         // if (registerResult.IsT0)
@@ -44,8 +51,21 @@ public class AuthenticationController : ControllerBase
         // {
         //     return Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists");
         // }
+        
+        Result<AuthenticationResult> registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+
+        if (registerResult.IsSuccess)
+        {
+            return Ok(MapAuthResult(registerResult.Value));
+        }
+
+
+        var firstError = registerResult.Errors[0];
+
+        return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists") : Problem();
     }
 
+    
     [HttpPost("login")]
     public IActionResult Login(LoginRequest request)
     {
