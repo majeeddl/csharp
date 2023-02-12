@@ -1,4 +1,7 @@
 // using BuberDinner.Application.Services.Authentication;
+
+using BuberDinner.Api.Filters;
+using BuberDinner.Api.Middlewares;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure;
 
@@ -12,7 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+
+//  add error handling filter attr to all controllers
+// builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,7 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler("/errors");
+
 // app.UseHttpsRedirection();
+
+// app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
 
