@@ -18,7 +18,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // builder.Services.AddControllers();
 
 //  add error handling filter attr to all controllers
-builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
+// builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,6 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler("/errors");
 
 // app.UseHttpsRedirection();
 
