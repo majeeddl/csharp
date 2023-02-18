@@ -1,5 +1,8 @@
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
+using BuberDinner.Application.Services.Authentication.Commands;
+using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
@@ -12,11 +15,14 @@ namespace BuberDinner.Api.Controllers;
 public class AuthenticationController : ControllerBase
 {
 
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAuthenticationCommandService _authenticationCommandService;
 
-    public AuthenticationController(IAuthenticationService authenticationService)
+    private readonly IAuthenticationQueryService _authenticationQuery;
+
+    public AuthenticationController(IAuthenticationCommandService authenticationCommandService, IAuthenticationQueryService authenticationQuery)
     {
-        _authenticationService = authenticationService;
+        _authenticationCommandService = authenticationCommandService;
+        _authenticationQuery = authenticationQuery;
     }
     
     private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
@@ -63,7 +69,7 @@ public class AuthenticationController : ControllerBase
         //
         // return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists") : Problem();
         
-        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+        ErrorOr<AuthenticationResult> authResult = _authenticationCommandService.Register(request.FirstName, request.LastName, request.Email, request.Password);
 
         return authResult.MatchFirst(
             authResult => Ok(MapAuthResult(authResult)),
@@ -75,7 +81,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login(LoginRequest request)
     {
-        var authResult = _authenticationService.Login(request.Email, request.Password);
+        var authResult = _authenticationQuery.Login(request.Email, request.Password);
         
         var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName, authResult.Email,authResult.Token);
         
