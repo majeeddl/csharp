@@ -1,8 +1,14 @@
+using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Authentication.Queries.Login;
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
+using BuberDinner.Application.Services.Authentication.Commands;
+using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
+using MediatR;
 
 namespace BuberDinner.Api.Controllers;
 
@@ -12,11 +18,15 @@ namespace BuberDinner.Api.Controllers;
 public class AuthenticationController : ControllerBase
 {
 
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IMediator _mediator;
+    // private readonly IAuthenticationCommandService _authenticationCommandService;
+    // private readonly IAuthenticationQueryService _authenticationQuery;
 
-    public AuthenticationController(IAuthenticationService authenticationService)
+    public AuthenticationController(IAuthenticationCommandService authenticationCommandService, IAuthenticationQueryService authenticationQuery, IMediator mediator)
     {
-        _authenticationService = authenticationService;
+        // _authenticationCommandService = authenticationCommandService;
+        // _authenticationQuery = authenticationQuery;
+        _mediator = mediator;
     }
     
     private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
@@ -27,7 +37,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
 
         // var authResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
@@ -62,8 +72,11 @@ public class AuthenticationController : ControllerBase
         // var firstError = registerResult.Errors[0];
         //
         // return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists") : Problem();
-        
-        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+
+        var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password);
+
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
+        // ErrorOr<AuthenticationResult> authResult = _authenticationCommandService.Register(request.FirstName, request.LastName, request.Email, request.Password);
 
         return authResult.MatchFirst(
             authResult => Ok(MapAuthResult(authResult)),
@@ -73,12 +86,22 @@ public class AuthenticationController : ControllerBase
 
     
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        var authResult = _authenticationService.Login(request.Email, request.Password);
-        
-        var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName, authResult.Email,authResult.Token);
-        
-        return Ok(response);
+
+        var query = new LoginQuery(request.Email, request.Password);
+        ;
+        var authResult = await _mediator.Send(query);
+
+        if (authResult.IsError)
+        {
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+        }
+
+        return authResult.Match(
+            authResult => Ok(MapAuthResult(authResult)),
+            //TODO : fix errors instead of string error
+            errors => Problem("errors ")
+            );
     }
 }
