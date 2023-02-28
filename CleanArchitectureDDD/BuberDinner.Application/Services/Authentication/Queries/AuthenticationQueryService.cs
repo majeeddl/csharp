@@ -31,6 +31,6 @@ public class AuthenticationQueryService : IAuthenticationQueryService
         // 3. Create new JWT
         var token = _jwtTokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
         
-        return new AuthenticationResult(user.Id,user.FirstName, user.LastName,email, token);
+        return new AuthenticationResult(user, token);
     }
 }

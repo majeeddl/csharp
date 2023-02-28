@@ -44,7 +44,7 @@ public class AuthenticationCommandService : IAuthenticationCommandService
 
         var token = _jwtTokenGenerator.GenerateToken(user.Id, firstName, lastName);
         
-        return new AuthenticationResult(user.Id,firstName,lastName,email , token);
+        return new AuthenticationResult(user , token);
     }
 
    
