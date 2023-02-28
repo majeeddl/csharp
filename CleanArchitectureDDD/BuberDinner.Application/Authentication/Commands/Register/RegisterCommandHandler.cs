@@ -24,6 +24,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,ErrorOr<Au
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
         if (_userRepository.GetUserByEmail(command.Email) is not null)
         {
             // throw new Exception("User with given email already exists");
@@ -43,6 +44,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,ErrorOr<Au
 
         var token = _jwtTokenGenerator.GenerateToken(user.Id,user.FirstName,user.LastName);
         
-        return new AuthenticationResult(user.Id,user.FirstName,user.LastName,user.Email , token);
+        return new AuthenticationResult(user , token);
     }
 }

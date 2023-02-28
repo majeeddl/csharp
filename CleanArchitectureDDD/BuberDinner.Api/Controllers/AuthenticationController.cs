@@ -8,6 +8,7 @@ using BuberDinner.Application.Services.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
+using MapsterMapper;
 using MediatR;
 
 namespace BuberDinner.Api.Controllers;
@@ -19,22 +20,24 @@ public class AuthenticationController : ControllerBase
 {
 
     private readonly IMediator _mediator;
+    private readonly  IMapper _mapper;
     // private readonly IAuthenticationCommandService _authenticationCommandService;
     // private readonly IAuthenticationQueryService _authenticationQuery;
 
-    public AuthenticationController(IAuthenticationCommandService authenticationCommandService, IAuthenticationQueryService authenticationQuery, IMediator mediator)
+    public AuthenticationController(IMediator mediator, IMapper mapper)
     {
         // _authenticationCommandService = authenticationCommandService;
         // _authenticationQuery = authenticationQuery;
         _mediator = mediator;
+        _mapper = mapper;
     }
     
-    private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
-    {
-        var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
-            authResult.Email, authResult.Token);
-        return response;
-    }
+    // private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
+    // {
+    //     var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
+    //         authResult.Email, authResult.Token);
+    //     return response;
+    // }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
@@ -73,13 +76,20 @@ public class AuthenticationController : ControllerBase
         //
         // return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists") : Problem();
 
-        var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password);
+        // var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password);
 
+        var command = _mapper.Map<RegisterCommand>(request);
+        
         ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
         // ErrorOr<AuthenticationResult> authResult = _authenticationCommandService.Register(request.FirstName, request.LastName, request.Email, request.Password);
 
+        // return authResult.MatchFirst(
+        //     authResult => Ok(MapAuthResult(authResult)),
+        //     firstError => Problem(statusCode:StatusCodes.Status409Conflict, title: firstError.Description)
+        // );
+        
         return authResult.MatchFirst(
-            authResult => Ok(MapAuthResult(authResult)),
+            authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
             firstError => Problem(statusCode:StatusCodes.Status409Conflict, title: firstError.Description)
         );
     }
@@ -89,8 +99,9 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
 
-        var query = new LoginQuery(request.Email, request.Password);
-        ;
+        // var query = new LoginQuery(request.Email, request.Password); 
+        var query = _mapper.Map<LoginQuery>(request);
+        
         var authResult = await _mediator.Send(query);
 
         if (authResult.IsError)
@@ -98,10 +109,16 @@ public class AuthenticationController : ControllerBase
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
         }
 
+        // return authResult.Match(
+        //     authResult => Ok(MapAuthResult(authResult)),
+        //     //TODO : fix errors instead of string error
+        //     errors => Problem("errors ")
+        //     );
+        
         return authResult.Match(
-            authResult => Ok(MapAuthResult(authResult)),
+            authResult => Ok(_mapper.Map<AuthenticationResult>(authResult)),
             //TODO : fix errors instead of string error
             errors => Problem("errors ")
-            );
+        );
     }
 }

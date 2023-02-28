@@ -25,6 +25,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery,ErrorOr<Authenticati
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
         // 1. Validate the user exists
         if (_userRepository.GetUserByEmail(query.Email) is not User user) throw new Exception("User with this email does not  exists");
         
@@ -34,7 +35,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery,ErrorOr<Authenticati
         // 3. Create new JWT
         var token = _jwtTokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
         
-        return new AuthenticationResult(user.Id,user.FirstName, user.LastName,user.Email, token);
+        return new AuthenticationResult(user, token);
     }
 
 

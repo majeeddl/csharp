@@ -1,7 +1,9 @@
 // using BuberDinner.Application.Services.Authentication;
 
+using BuberDinner.Api;
 using BuberDinner.Api.Errors;
 using BuberDinner.Api.Filters;
+using BuberDinner.Api.Mapping;
 using BuberDinner.Api.Middlewares;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure;
@@ -14,12 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
 //remove this line and use dependency injection
 // builder.Services.AddScoped<IAuthenticationService,AuthenticationService>();
 
+builder.Services.AddAdapter();
+
 // => dependency injection
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
-builder.Services.AddControllers();
 
 //  add error handling filter attr to all controllers
 // builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
