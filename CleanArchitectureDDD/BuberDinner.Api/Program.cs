@@ -53,7 +53,7 @@ app.UseExceptionHandler("/errors");
 // app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
-
+app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
