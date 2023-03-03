@@ -54,6 +54,7 @@ app.UseExceptionHandler("/errors");
 
 app.UseAuthorization();
 app.UseAuthentication();
+
 app.MapControllers();
 
 app.Run();
