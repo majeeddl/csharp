@@ -22,6 +22,10 @@ namespace BaseApp.Controllers
         public List<string> Get()
         {
             var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+
+
+            var name = Shared.Common.GetName();
+            
             return new List<string>() { "Hello", "World", "Test" , connectionString };
         }
     }
