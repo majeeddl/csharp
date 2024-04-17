@@ -1,0 +1,20 @@
+# Ignore .NET build artifacts
+bin/
+obj/
+
+# Ignore Visual Studio files
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+*.csproj.user
+*.userprefs
+*.vs/
+
+# Ignore NuGet packages
+*.nupkg
+packages/
+*.lock.json
+
+# Ignore build scripts
+build/

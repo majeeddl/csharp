@@ -1,0 +1,13 @@
+
+version: '3.8'
+services:
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ENV_VAR_1=value1
+      - ConnectionStrings__DefaultConnection=changeItFromDockerCompose
+    ports:
+      - "5000:80"
